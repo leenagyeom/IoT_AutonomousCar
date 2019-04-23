@@ -3,14 +3,10 @@ int in1Pin = 10;
 int in2Pin = 9;
 int switchPin = 7;
 
-
-
 boolean bReverse = false;
 int nSpeed = 250;
 int now;
 int turn = 0;
-
-
 
 void setup() {
   Serial.begin(9600);
@@ -20,15 +16,10 @@ void setup() {
   pinMode(switchPin, INPUT_PULLUP);
 }
 
-
-
 void loop() {
   //now = digitalRead(switchPin); //버튼을 연결해서 누를 때 방향을 틀게 한다면 주석을 풀고 now변수를 쓰면 된다.
-  
   //if(now==0)
   //{
-
-  
     if(turn%2==0)
     {
       setMotor(nSpeed, bReverse);
@@ -41,13 +32,9 @@ void loop() {
       setMotor2(nSpeed, bReverse);
       turn++;
     }
-
-    
   //}
-
   delay(700);
 }
-
 
 void setMotor(int nSpeed, boolean bReverse)
 {
