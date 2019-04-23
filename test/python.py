@@ -11,13 +11,9 @@ serialFromArduino.flushInput()
 
 cap = cv2.VideoCapture(0)
 
-
-
 flag_one = 0
 flag_two = 0
 flag_three = 0
-
-
 
 def roi(img,vertices):
  mask=np.zeros_like(img)
@@ -52,21 +48,23 @@ def To_Arduino(src,lines):
         if degree >63:
             global flag_two
             flag_two = flag_two+1
-            if flag_two==13:
+            if flag_two==9:
                 serialFromArduino.write(b'2')
                 flag_two = 0
-        elif degree <46.5:
+        elif degree <49:
             global flag_three
             flag_three = flag_three+1
-            if flag_three==13:
+            if flag_three==9:
                 serialFromArduino.write(b'3')
                 flag_three = 0
     else:
         global flag_one
         flag_one = flag_one+1
-        if flag_one==13:
+        if flag_one==9:
             serialFromArduino.write(b'1')
             flag_one = 0
+
+
 
 while (True):
     ret, src = cap.read()
