@@ -58,4 +58,3 @@ while (True):
         
 cap.release()
 cv2.destroyAllWindows()
-[출처] Open CV 가볍게 수정 (비공개 카페)
