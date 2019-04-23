@@ -11,6 +11,14 @@ serialFromArduino.flushInput()
 
 cap = cv2.VideoCapture(0)
 
+
+
+flag_one = 0
+flag_two = 0
+flag_three = 0
+
+
+
 def roi(img,vertices):
  mask=np.zeros_like(img)
  cv2.fillPoly(mask,vertices,255)
@@ -24,9 +32,6 @@ def hough_lines(img):
     lines=cv2.HoughLinesP(img,1,math.pi/180.0,50,None,35,10)
     return lines
 
-#def draw_lines(img,lines,color=[0,0,255]):
-#    cv2.line(img,(x1,y1), (x2,y2), color, 3)
-
 def initial(src):
     dst = cv2.GaussianBlur(src,(5,5),0)
     dst = cv2.Canny(src, 50, 200, None, 3)
@@ -36,7 +41,6 @@ def initial(src):
     return lines
 
 def To_Arduino(src,lines):
-    
     a,b,c = lines.shape
     (x1,y1,x2,y2) = (lines[0][0][0], lines[0][0][1], lines[0][0][2], lines[0][0][3])
                 
@@ -46,16 +50,23 @@ def To_Arduino(src,lines):
         cv2.line(src,(x1,y1), (x2,y2), [0,0,255], 3)
         degree = angle(x2-x1,y2-y1)
         if degree >63:
-            serialFromArduino.write(b'2')
-            time.sleep(0.05)
+            global flag_two
+            flag_two = flag_two+1
+            if flag_two==13:
+                serialFromArduino.write(b'2')
+                flag_two = 0
         elif degree <46.5:
-            serialFromArduino.write(b'3')
-            time.sleep(0.05)
+            global flag_three
+            flag_three = flag_three+1
+            if flag_three==13:
+                serialFromArduino.write(b'3')
+                flag_three = 0
     else:
-        serialFromArduino.write(b'1')
-        time.sleep(0.05)
-
-
+        global flag_one
+        flag_one = flag_one+1
+        if flag_one==13:
+            serialFromArduino.write(b'1')
+            flag_one = 0
 
 while (True):
     ret, src = cap.read()
