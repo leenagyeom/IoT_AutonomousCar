@@ -6,8 +6,11 @@ int SpeedPin_34 = 2;    // front speed
 int SpeedPin_12 = 3;    // back speed
 int turn=0;
 
+
+
 void setup() {
   Serial.begin(9600);
+  Serial.setTimeout(30);
   pinMode(in1Pin, OUTPUT);
   pinMode(in2Pin, OUTPUT);
   pinMode(SpeedPin_12, OUTPUT);
@@ -17,54 +20,65 @@ void setup() {
 }
  
 void loop() {
-     ForwardM();
-    
-    if(Serial.available() > 0){ 
-      turn = Serial.parseInt();
-      Serial.println(turn);
-      switch(turn)
-      {
-        case 1:
-        RightM(300);
-        midM();
-        break;
-        case 2:
-        LeftM(1000);
-        midM();
-        break;
-        case 3:
-        LeftM(150);
-        midM();
-        break;
-      }
-      
+     ForwardM();   
+     if(Serial.available()){ 
+     turn = Serial.parseInt();
+     FromRasp(turn);
     }   
+}
+
+void FromRasp(int turn)
+{
+  Serial.println(turn);
+  switch(turn)
+  {
+    case 1:
+      RightM(100);
+      break;
+    case 2:
+      BigLeftM();
+      break;
+    case 3:
+      LeftM(100);
+      break;
+    }
 }
 
 void ForwardM()
 {
-  digitalWrite(in1Pin, LOW);
-  digitalWrite(in2Pin, HIGH);
-  analogWrite(SpeedPin_12, 120);
+  digitalWrite(in1Pin, HIGH);
+  digitalWrite(in2Pin, LOW);
+  analogWrite(SpeedPin_12, 135);
 }
 
 void LeftM(int timed){
   digitalWrite(in3Pin, LOW);
   digitalWrite(in4Pin, HIGH);
-  analogWrite(SpeedPin_34, 250);
+  analogWrite(SpeedPin_34, 200);
   delay(timed);
+  digitalWrite(in3Pin, LOW);
+  digitalWrite(in4Pin, LOW);
+}
+
+void BigLeftM(){
+  digitalWrite(in3Pin, LOW);
+  digitalWrite(in4Pin, HIGH);
+  analogWrite(SpeedPin_34, 250);
+  delay(500);
+  digitalWrite(in3Pin, LOW);
+  digitalWrite(in4Pin, LOW);
+  digitalWrite(in1Pin, HIGH);
+  digitalWrite(in2Pin, LOW);
+  analogWrite(SpeedPin_12, 250);
+  delay(280);
 }
 
 void RightM(int timed){ 
   
   digitalWrite(in3Pin, HIGH);
   digitalWrite(in4Pin, LOW);
-  analogWrite(SpeedPin_34, 250);
+  analogWrite(SpeedPin_34, 200);
   delay(timed);   
-}
-
-void midM(){
   digitalWrite(in3Pin, LOW);
   digitalWrite(in4Pin, LOW);
-  analogWrite(SpeedPin_34, 250);
 }
