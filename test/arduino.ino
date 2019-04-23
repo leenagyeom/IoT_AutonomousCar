@@ -22,14 +22,22 @@ void loop() {
     if(Serial.available() > 0){ 
       turn = Serial.parseInt();
       Serial.println(turn);
-      if(turn == 1 | turn == 11){
-          RightM(300);
-          midM();
+      switch(turn)
+      {
+        case 1:
+        RightM(300);
+        midM();
+        break;
+        case 2:
+        LeftM(1000);
+        midM();
+        break;
+        case 3:
+        LeftM(150);
+        midM();
+        break;
       }
-      if(turn == 2 | turn == 22){
-          LeftM(1000);
-          midM();
-      }
+      
     }   
 }
 
