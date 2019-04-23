@@ -1,84 +1,75 @@
-int in1Pin = 6;      // back wheel 1
-int in2Pin = 7;      // back wheel 2
 int in3Pin = 8;      // front wheel 3
 int in4Pin = 9;      // front wheel 4
-int SpeedPin_34 = 2;    // front speed
-int SpeedPin_12 = 3;    // back speed
+int SpeedPin_34 = 5;    // front speed
 int turn=0;
-
-
+int numberLeft=0;
 
 void setup() {
   Serial.begin(9600);
-  Serial.setTimeout(30);
-  pinMode(in1Pin, OUTPUT);
-  pinMode(in2Pin, OUTPUT);
-  pinMode(SpeedPin_12, OUTPUT);
+  Serial.setTimeout(5);
   pinMode(in3Pin, OUTPUT);
   pinMode(in4Pin, OUTPUT);
   pinMode(SpeedPin_34, OUTPUT);
 }
- 
+
 void loop() {
-     ForwardM();   
-     if(Serial.available()){ 
+     if(Serial.available()){
      turn = Serial.parseInt();
      FromRasp(turn);
-    }   
+    }
 }
 
 void FromRasp(int turn)
 {
-  Serial.println(turn);
+
+  //Serial.println(turn);
   switch(turn)
   {
     case 1:
-      RightM(100);
+      RightM(80);
       break;
     case 2:
-      BigLeftM();
+      if(numberLeft==3){
+        numberLeft = 0;
+        RightM(110);
+      }
+      else
+        BigLeftM();
       break;
     case 3:
-      LeftM(100);
+      LeftM();
       break;
     }
 }
 
-void ForwardM()
-{
-  digitalWrite(in1Pin, HIGH);
-  digitalWrite(in2Pin, LOW);
-  analogWrite(SpeedPin_12, 135);
-}
-
-void LeftM(int timed){
-  digitalWrite(in3Pin, LOW);
-  digitalWrite(in4Pin, HIGH);
-  analogWrite(SpeedPin_34, 200);
-  delay(timed);
+void LeftM(){
+  digitalWrite(in3Pin, HIGH);
+  digitalWrite(in4Pin, LOW);
+  analogWrite(SpeedPin_34, 80);
+  delay(50);
   digitalWrite(in3Pin, LOW);
   digitalWrite(in4Pin, LOW);
+  delay(10);
 }
 
 void BigLeftM(){
-  digitalWrite(in3Pin, LOW);
-  digitalWrite(in4Pin, HIGH);
-  analogWrite(SpeedPin_34, 250);
-  delay(500);
-  digitalWrite(in3Pin, LOW);
-  digitalWrite(in4Pin, LOW);
-  digitalWrite(in1Pin, HIGH);
-  digitalWrite(in2Pin, LOW);
-  analogWrite(SpeedPin_12, 250);
-  delay(280);
-}
-
-void RightM(int timed){ 
-  
+  numberLeft++;
   digitalWrite(in3Pin, HIGH);
   digitalWrite(in4Pin, LOW);
-  analogWrite(SpeedPin_34, 200);
-  delay(timed);   
+  analogWrite(SpeedPin_34, 220);
+  delay(700);
   digitalWrite(in3Pin, LOW);
   digitalWrite(in4Pin, LOW);
+  delay(10);
+}
+
+void RightM(int tuurn){
+
+  digitalWrite(in3Pin, LOW);
+  digitalWrite(in4Pin, HIGH);
+  analogWrite(SpeedPin_34, 200);
+  delay(tuurn);
+  digitalWrite(in3Pin, LOW);
+  digitalWrite(in4Pin, LOW);
+  delay(10);
 }
